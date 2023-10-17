@@ -16,7 +16,7 @@ export class App extends Component {
     loadMore: false,
   };
 
-  changeSearch = value => {
+  handleSubmit = value => {
     this.setState(prevState => {
       if (prevState.query !== value) {
         return {
@@ -31,7 +31,7 @@ export class App extends Component {
     });
   };
 
-  changePage = () => {
+  handleLoadMore = () => {
     this.setState(prevState => ({
       page: prevState.page + 1,
     }));
@@ -59,10 +59,10 @@ export class App extends Component {
 
     return (
       <Layout>
-        <Searchbar onSubmit ={this.changeSearch} />
+        <Searchbar onSubmit ={this.handleSubmit} />
         {loading && <Loader />}
         {images.length !== 0 && <ImageGallery images={images} />}
-        {images.length !== 0 && <Button handleClick={this.changePage} />}
+        {images.length !== 0 && <Button handleClick={this.handleLoadMore} />}
       </Layout>
     );
   }
