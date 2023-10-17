@@ -6,6 +6,8 @@ import { fetchImages } from './pixabay-api';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
 
+const per_page = 12;
+
 export class App extends Component {
   state = {
     images: [],
@@ -18,16 +20,13 @@ export class App extends Component {
 
   handleSubmit = value => {
     this.setState(prevState => {
-      if (prevState.query !== value) {
+      if (prevState.query !== value && value) {
         return {
           query: value,
           page: 1,
           images: [],
-        }
+        };
       }
-        return {
-          query: value,
-        }
     });
   };
 
@@ -42,10 +41,16 @@ export class App extends Component {
     if (page !== prevState.page || query !== prevState.query) {
       try {
         this.setState({ loading: true, error: false });
-        const { hits } = await fetchImages(query, page);
+
+        const { hits, totalHits } = await fetchImages(query, page, per_page);
+
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
         }));
+
+        if (totalHits < page * per_page) {
+          this.setState({ loadMore: false });
+        } else {this.setState({ loadMore: true });}
       } catch (error) {
         this.setState({ error: true });
       } finally {
@@ -55,14 +60,14 @@ export class App extends Component {
   }
 
   render() {
-    const { images, loading } = this.state;
+    const { images, loading, loadMore } = this.state;
 
     return (
       <Layout>
-        <Searchbar onSubmit ={this.handleSubmit} />
+        <Searchbar onSubmit={this.handleSubmit} />
+        {images.length > 0 && <ImageGallery images={images} />}
         {loading && <Loader />}
-        {images.length !== 0 && <ImageGallery images={images} />}
-        {images.length !== 0 && <Button handleClick={this.handleLoadMore} />}
+        {loadMore && <Button handleClick={this.handleLoadMore} />}
       </Layout>
     );
   }
