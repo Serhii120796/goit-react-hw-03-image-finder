@@ -6,8 +6,6 @@ import { fetchImages } from './pixabay-api';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
 
-const per_page = 12;
-
 export class App extends Component {
   state = {
     images: [],
@@ -18,9 +16,11 @@ export class App extends Component {
     loadMore: false,
   };
 
+  per_page = 12;
+
   handleSubmit = value => {
     this.setState(prevState => {
-      if (prevState.query !== value && value) {
+      if (prevState.query !== value) {
         return {
           query: value,
           page: 1,
@@ -42,15 +42,17 @@ export class App extends Component {
       try {
         this.setState({ loading: true, error: false });
 
-        const { hits, totalHits } = await fetchImages(query, page, per_page);
+        const { hits, totalHits } = await fetchImages(query, page, this.per_page);
 
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
         }));
 
-        if (totalHits < page * per_page) {
+        if (totalHits < page * this.per_page) {
           this.setState({ loadMore: false });
-        } else {this.setState({ loadMore: true });}
+        } else {
+          this.setState({ loadMore: true });
+        }
       } catch (error) {
         this.setState({ error: true });
       } finally {

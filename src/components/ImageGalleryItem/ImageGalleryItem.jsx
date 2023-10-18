@@ -1,5 +1,4 @@
 import { GalleryItem, SmallImage, Image } from './ImageGalleryItem.styled';
-// import { ModalWindow } from '../Modal/Modal';
 import { Component } from 'react';
 import Modal from 'react-modal';
 
@@ -25,7 +24,7 @@ export class ImageGalleryItem extends Component {
     showModal: false,
   };
 
-  openModal = (target) => {
+  openModal = target => {
     this.setState({ showModal: true });
   };
 
@@ -35,23 +34,24 @@ export class ImageGalleryItem extends Component {
 
   render() {
     const { showModal } = this.state;
-    
+
     const {
       image: { webformatURL, largeImageURL },
     } = this.props;
 
     return (
-      <><GalleryItem onClick={this.openModal}>
-        <SmallImage src={webformatURL} alt="" />
-      </GalleryItem>
-      <Modal
-      isOpen={showModal}
-      onRequestClose={this.closeModal}
-      style={customStyles}
-    >
-      <Image src={largeImageURL} alt="" />
+      <>
+        <GalleryItem onClick={this.openModal}>
+          <SmallImage src={webformatURL} alt="" />
+        </GalleryItem>
+        <Modal
+          isOpen={showModal}
+          onRequestClose={this.closeModal}
+          style={customStyles}
+        >
+          <Image src={largeImageURL} alt="" />
         </Modal>
-      </>      
+      </>
     );
   }
 }
