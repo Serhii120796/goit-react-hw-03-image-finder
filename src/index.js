@@ -5,6 +5,10 @@ import { ThemeProvider } from 'styled-components';
 import { GlobalStyle } from 'components/GlobalStyle';
 
 const theme = {
+  colors: {
+    black: '#000000',
+    error: 'red',
+  },
   radius: '5px',
   spasing: value => `${value * 4}px`,
 };

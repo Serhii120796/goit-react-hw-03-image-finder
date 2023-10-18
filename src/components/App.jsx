@@ -5,6 +5,7 @@ import { ImageGallery } from './ImageGallery/ImageGallery';
 import { fetchImages } from './pixabay-api';
 import { Button } from './Button/Button';
 import { Loader } from './Loader/Loader';
+import { Error } from './Error/Error';
 
 export class App extends Component {
   state = {
@@ -42,7 +43,11 @@ export class App extends Component {
       try {
         this.setState({ loading: true, error: false });
 
-        const { hits, totalHits } = await fetchImages(query, page, this.per_page);
+        const { hits, totalHits } = await fetchImages(
+          query,
+          page,
+          this.per_page
+        );
 
         this.setState(prevState => ({
           images: [...prevState.images, ...hits],
@@ -62,13 +67,14 @@ export class App extends Component {
   }
 
   render() {
-    const { images, loading, loadMore } = this.state;
+    const { images, loading, loadMore, error } = this.state;
 
     return (
       <Layout>
         <Searchbar onSubmit={this.handleSubmit} />
         {images.length > 0 && <ImageGallery images={images} />}
         {loading && <Loader />}
+        {error && <Error />}
         {loadMore && <Button handleClick={this.handleLoadMore} />}
       </Layout>
     );
